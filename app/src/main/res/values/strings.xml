@@ -51,5 +51,10 @@
     <string name="default_NombreFich">Bantumi_savefile</string>
     <string name="txtSaveGame">Se ha guardado la partida correctamente</string>
     <string name="txtSaveGameError">Ha ocurrido un error al intentar guardar partida</string>
+    <string name="txtEmptyFile">No se encuentran partidas guardadas</string>
+    <string name="txtLoadFile">Se ha cargado la partida correctamente</string>
+    <string name="txtLoadFileError">Ha ocurrido un error al intentar cargar la partida</string>
+    <string name="txtDialogoLoadTitle">Cargar partida</string>
+    <string name="txtDialogoLoadPregunta">¿Quieres recuperar la partida guardada?</string>
 
 </resources>
