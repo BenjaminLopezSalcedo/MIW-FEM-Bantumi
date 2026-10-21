@@ -204,7 +204,7 @@ public class JuegoBantumi {
      * @return juego serializado
      */
     public String serializa() {
-        StringBuilder serializedData = new StringBuilder(" ");
+        StringBuilder serializedData = new StringBuilder();
 
         //Guardamos el turno
         serializedData
@@ -227,6 +227,12 @@ public class JuegoBantumi {
      * @param juegoSerializado cadena que representa el estado completo del juego
      */
     public void deserializa(String juegoSerializado) {
-        // @TODO
+        String[] turnAndSeeds = juegoSerializado.split("\\|");
+        String[] seeds = turnAndSeeds[1].split("-");
+
+        setTurno(Turno.valueOf(turnAndSeeds[0].strip()));
+        for (int n = 0; n < seeds.length; n++) {
+            setSemillas(n, Integer.parseInt(seeds[n]));
+        }
     }
 }

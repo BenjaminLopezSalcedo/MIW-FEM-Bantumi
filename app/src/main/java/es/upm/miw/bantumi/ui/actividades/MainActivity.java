@@ -19,12 +19,16 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.BufferedReader;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.util.Locale;
+import java.util.Objects;
 
 import es.upm.miw.bantumi.ui.fragmentos.FinalAlertDialog;
 import es.upm.miw.bantumi.R;
 import es.upm.miw.bantumi.dominio.logica.JuegoBantumi;
+import es.upm.miw.bantumi.ui.fragmentos.LoadSaveDialog;
 import es.upm.miw.bantumi.ui.fragmentos.RestartAlertDialog;
 import es.upm.miw.bantumi.ui.viewmodel.BantumiViewModel;
 
@@ -147,16 +151,8 @@ public class MainActivity extends AppCompatActivity {
         } else if (itemId == R.id.opcGuardarPartida) {
             saveGame();
 
-            //Necesita un fichero con:
-            // - turno de jugador -> [es un enum,mirar JuegoBantumi],
-            // - semillas en almacenes y semillas en casillas -> [un arrays de las semillas en casillas, mirar BantumiViewModel]
-            //
-            //  Quedaria en escribirlo en el fichero con los getters
-            //
-            // (Para las multiples partidas, un título/nombre identificativo)
-
-        //} else if (itemId == R.id.opcRecuperarPartida) {
-            // @TODO Recuperar partida
+        } else if (itemId == R.id.opcRecuperarPartida) {
+            new LoadSaveDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
 
         //} else if (itemId == R.id.opcMejoresResultados) {
             // @TODO Mejores resultados
@@ -214,6 +210,52 @@ public class MainActivity extends AppCompatActivity {
             ).show();
 
             Log.e(LOG_TAG, "FILE I/O ERROR: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Carga la partida guardada en el fichero Bantumi_savefile
+     * <p>
+     * Si está vacío → mostrar un Toast
+     */
+    public void loadSaveFile() {
+        boolean hasContent = false;
+        BufferedReader fin;
+
+        try {   // Leer fichero y mostrarlo en TextView
+            //Abrimos lectura
+            fin = new BufferedReader(
+                    new InputStreamReader(openFileInput(getFileName()))); // Memoria interna
+
+            String linea = fin.readLine(); // Procesar contenido fichero
+
+            if(linea!=null){ //Confirma que hay contenido
+                juegoBantumi.deserializa(linea); //Desserializa para cargar partida
+                hasContent = true;
+            }
+            fin.close(); //Cerramos lectura
+
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.txtLoadFile),
+                    Snackbar.LENGTH_SHORT
+            ).show();
+            Log.i(LOG_TAG, "LOAD -> Partida recuperada y cargada correctamente");
+
+        } catch (Exception e) {
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.txtLoadFileError),
+                    Snackbar.LENGTH_SHORT
+            ).show();
+            Log.e(LOG_TAG, "FILE I/O ERROR: " + e.getMessage());
+        }
+        if (!hasContent) {
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.txtEmptyFile),
+                    Snackbar.LENGTH_SHORT
+            ).show();
         }
     }
 
