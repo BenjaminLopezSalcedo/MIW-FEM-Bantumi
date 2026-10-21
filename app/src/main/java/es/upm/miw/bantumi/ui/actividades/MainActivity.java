@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.FileOutputStream;
 import java.util.Locale;
 
 import es.upm.miw.bantumi.ui.fragmentos.FinalAlertDialog;
@@ -139,9 +140,27 @@ public class MainActivity extends AppCompatActivity {
                     .show();
         // } else if (itemId == R.id.opcAjustes) { // @TODO Preferencias
             // startActivity(new Intent(this, BantumiPrefs.class));
-        // @TODO!!! resto opciones
+
         } else if (itemId == R.id.opcReiniciarPartida) {
             new RestartAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
+
+        } else if (itemId == R.id.opcGuardarPartida) {
+            saveGame();
+
+            //Necesita un fichero con:
+            // - turno de jugador -> [es un enum,mirar JuegoBantumi],
+            // - semillas en almacenes y semillas en casillas -> [un arrays de las semillas en casillas, mirar BantumiViewModel]
+            //
+            //  Quedaria en escribirlo en el fichero con los getters
+            //
+            // (Para las multiples partidas, un título/nombre identificativo)
+
+        //} else if (itemId == R.id.opcRecuperarPartida) {
+            // @TODO Recuperar partida
+
+        //} else if (itemId == R.id.opcMejoresResultados) {
+            // @TODO Mejores resultados
+
         } else {
             Snackbar.make(
                     findViewById(android.R.id.content),
@@ -150,6 +169,52 @@ public class MainActivity extends AppCompatActivity {
             ).show();
         }
         return true;
+    }
+
+    /**
+     * Devuelve el nombre del fichero
+     *
+     * @return nombre del fichero
+     */
+    private String getFileName() {
+        String nombreFichero = getResources().getString(R.string.default_NombreFich);
+        Log.i(LOG_TAG, "Nombre fichero: " + nombreFichero);
+
+        return nombreFichero;
+    }
+
+    /**
+     * Guarda los datos serializados de la partida en un fichero
+     */
+    public void saveGame() {
+
+        try {  // Añadir partida al fichero
+            FileOutputStream fos;
+
+            // Abrimos fichero de guardado
+            fos = openFileOutput(getFileName(), MODE_PRIVATE); // Memoria interna
+            fos.write(juegoBantumi.serializa().getBytes()); //Escribimos en fichero de guardado
+            fos.close(); //Cerramos el fichero
+
+            //Notificamos que se ha guardado correctamente
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.txtSaveGame),
+                    Snackbar.LENGTH_LONG
+            ).show();
+
+            Log.i(LOG_TAG, "Click botón Guardar -> GUARDAR partida");
+        } catch (Exception e) {
+
+            //Notificamos de un error al guardar
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.txtSaveGameError),
+                    Snackbar.LENGTH_LONG
+            ).show();
+
+            Log.e(LOG_TAG, "FILE I/O ERROR: " + e.getMessage());
+        }
     }
 
     /**
