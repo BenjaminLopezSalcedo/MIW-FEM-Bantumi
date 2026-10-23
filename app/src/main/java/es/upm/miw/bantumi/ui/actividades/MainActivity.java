@@ -232,15 +232,15 @@ public class MainActivity extends AppCompatActivity {
             if(linea!=null){ //Confirma que hay contenido
                 juegoBantumi.deserializa(linea); //Desserializa para cargar partida
                 hasContent = true;
+
+                Snackbar.make(
+                        findViewById(android.R.id.content),
+                        getString(R.string.txtLoadFile),
+                        Snackbar.LENGTH_SHORT
+                ).show();
+                Log.i(LOG_TAG, "LOAD -> Partida recuperada y cargada correctamente");
             }
             fin.close(); //Cerramos lectura
-
-            Snackbar.make(
-                    findViewById(android.R.id.content),
-                    getString(R.string.txtLoadFile),
-                    Snackbar.LENGTH_SHORT
-            ).show();
-            Log.i(LOG_TAG, "LOAD -> Partida recuperada y cargada correctamente");
 
         } catch (Exception e) {
             Snackbar.make(
