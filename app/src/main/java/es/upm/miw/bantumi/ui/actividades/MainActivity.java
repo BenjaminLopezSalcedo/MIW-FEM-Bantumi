@@ -16,15 +16,20 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.room.Room;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import es.upm.miw.bantumi.datos.FinalScore;
+import es.upm.miw.bantumi.datos.FinalScoreRepository;
 import es.upm.miw.bantumi.ui.fragmentos.FinalAlertDialog;
 import es.upm.miw.bantumi.R;
 import es.upm.miw.bantumi.dominio.logica.JuegoBantumi;
@@ -38,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     public JuegoBantumi juegoBantumi;
     private BantumiViewModel bantumiVM;
     int numInicialSemillas;
+    FinalScoreRepository finalScoreRepository;
+    List<FinalScore> finalScores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +63,14 @@ public class MainActivity extends AppCompatActivity {
         bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
         juegoBantumi = new JuegoBantumi(bantumiVM, JuegoBantumi.Turno.turnoJ1, numInicialSemillas);
         crearObservadores();
+
+        finalScoreRepository = Room.databaseBuilder(
+                        getApplicationContext(),
+                        FinalScoreRepository.class,
+                        FinalScoreRepository.DATA_BASE
+                )
+                .allowMainThreadQueries()
+                .build();
     }
 
     /**
@@ -278,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
                 juegoBantumi.juegaComputador();
                 break;
             default:    // JUEGO TERMINADO
-                finJuego();
+                break;
         }
         if (juegoBantumi.juegoTerminado()) {
             finJuego();
@@ -296,7 +311,13 @@ public class MainActivity extends AppCompatActivity {
             texto = "¡¡¡ EMPATE !!!";
         }
 
-        // @TODO guardar puntuación
+        finalScoreRepository.finalScoreDAO().insert(new FinalScore(
+           "PlaceHolder",
+                LocalDateTime.now(),
+                juegoBantumi.getSemillas(6),
+                juegoBantumi.getSemillas(13)
+        ));
+        finalScores = finalScoreRepository.finalScoreDAO().getAll();
 
         // terminar
         new FinalAlertDialog(texto).show(getSupportFragmentManager(), "ALERT_DIALOG");

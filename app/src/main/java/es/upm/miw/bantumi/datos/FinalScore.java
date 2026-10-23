@@ -21,6 +21,13 @@ public class FinalScore {
     protected int seedsPlayer1;
     protected int seedsPlayer2;
 
+    public FinalScore(String playerName, LocalDateTime timeStamp, int seedsPlayer1, int seedsPlayer2) {
+        this.playerName = playerName;
+        this.timeStamp = timeStamp;
+        this.seedsPlayer1 = seedsPlayer1;
+        this.seedsPlayer2 = seedsPlayer2;
+    }
+
     public String getPlayerName() {
         return playerName;
     }
