@@ -44,4 +44,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata)
 
     implementation(libs.androidx.lifecycle.livedata.core)
+
+    // Room
+    implementation(libs.roomCommon)
+    annotationProcessor(libs.roomCompiler)
+    implementation(libs.roomRuntime)
 }
