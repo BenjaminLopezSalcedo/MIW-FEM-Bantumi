@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                     .setMessage(R.string.aboutMessage)
                     .setPositiveButton(android.R.string.ok, null)
                     .show();
-        // } else if (itemId == R.id.opcAjustes) { // @TODO Preferencias
+            // } else if (itemId == R.id.opcAjustes) { // @TODO Preferencias
             // startActivity(new Intent(this, BantumiPrefs.class));
 
         } else if (itemId == R.id.opcReiniciarPartida) {
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (itemId == R.id.opcRecuperarPartida) {
             new LoadSaveDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
 
-        //} else if (itemId == R.id.opcMejoresResultados) {
+            //} else if (itemId == R.id.opcMejoresResultados) {
             // @TODO Mejores resultados
 
         } else {
@@ -282,6 +282,9 @@ public class MainActivity extends AppCompatActivity {
     public void huecoPulsado(@NonNull View v) {
         String resourceName = getResources().getResourceEntryName(v.getId()); // pXY
         int num = Integer.parseInt(resourceName.substring(resourceName.length() - 2));
+
+        boolean finishedGame = juegoBantumi.juegoTerminado();
+
         Log.i(LOG_TAG, "huecoPulsado(" + resourceName + ") num=" + num);
         switch (juegoBantumi.turnoActual()) {
             case turnoJ1:
@@ -296,8 +299,21 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         if (juegoBantumi.juegoTerminado()) {
+            if(!finishedGame) saveScore();
             finJuego();
         }
+    }
+
+    /**
+     * Se guarda la puntuación en la base de datos
+     */
+    private void saveScore(){
+        finalScoreRepository.finalScoreDAO().insert(new FinalScore(
+                "PlaceHolder",
+                LocalDateTime.now(),
+                juegoBantumi.getSemillas(6),
+                juegoBantumi.getSemillas(13)
+        ));
     }
 
     /**
@@ -310,14 +326,6 @@ public class MainActivity extends AppCompatActivity {
         if (juegoBantumi.getSemillas(6) == 6 * numInicialSemillas) {
             texto = "¡¡¡ EMPATE !!!";
         }
-
-        finalScoreRepository.finalScoreDAO().insert(new FinalScore(
-           "PlaceHolder",
-                LocalDateTime.now(),
-                juegoBantumi.getSemillas(6),
-                juegoBantumi.getSemillas(13)
-        ));
-        finalScores = finalScoreRepository.finalScoreDAO().getAll();
 
         // terminar
         new FinalAlertDialog(texto).show(getSupportFragmentManager(), "ALERT_DIALOG");
