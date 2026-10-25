@@ -61,5 +61,7 @@
     <string name="title_PlayerName">Nombre del jugador:</string>
     <string name="defaultName">Jugador 1</string>
     <string name="title_activity_preference_settings">PreferenceSettingsActivity</string>
+    <string name="txtDialogoDeleteScores">Borrar tabla de puntuaciones</string>
+    <string name="txtDialogoDeleteScoresPregunta">¿Quieres borrar todas las puntuaciones guardadas de anteriores partidas?</string>
 
 </resources>

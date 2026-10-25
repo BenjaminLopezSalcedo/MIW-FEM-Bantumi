@@ -16,4 +16,7 @@ public interface FinalScoreDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insert(FinalScore finalScore);
 
+    @Query("DELETE FROM " + FinalScore.TABLA)
+    void deleteAll();
+
 }

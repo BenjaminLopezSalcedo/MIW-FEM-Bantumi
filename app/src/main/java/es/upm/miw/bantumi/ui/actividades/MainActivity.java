@@ -33,6 +33,7 @@ import java.util.Objects;
 
 import es.upm.miw.bantumi.datos.FinalScore;
 import es.upm.miw.bantumi.datos.FinalScoreRepository;
+import es.upm.miw.bantumi.ui.fragmentos.DeleteScoresAlertDialog;
 import es.upm.miw.bantumi.ui.fragmentos.FinalAlertDialog;
 import es.upm.miw.bantumi.R;
 import es.upm.miw.bantumi.dominio.logica.JuegoBantumi;
@@ -185,9 +186,9 @@ public class MainActivity extends AppCompatActivity {
         } else if (itemId == R.id.opcRecuperarPartida) {
             new LoadSaveDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
 
-            //} else if (itemId == R.id.opcMejoresResultados) {
+        } else if (itemId == R.id.opcMejoresResultados) {
             // @TODO Mejores resultados
-
+            new DeleteScoresAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
         } else {
             Snackbar.make(
                     findViewById(android.R.id.content),
@@ -352,5 +353,10 @@ public class MainActivity extends AppCompatActivity {
 
         // terminar
         new FinalAlertDialog(texto).show(getSupportFragmentManager(), "ALERT_DIALOG");
+    }
+
+    public void deleteScores(){
+        finalScoreRepository.finalScoreDAO().deleteAll();
+        finalScores = finalScoreRepository.finalScoreDAO().getAll();
     }
 }
