@@ -190,6 +190,8 @@ public class MainActivity extends AppCompatActivity {
             // @TODO Mejores resultados
             //new DeleteScoresAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
             getTop10Scores();
+            startActivity(new Intent(this, BestScoresActivity.class));
+
         } else {
             Snackbar.make(
                     findViewById(android.R.id.content),
