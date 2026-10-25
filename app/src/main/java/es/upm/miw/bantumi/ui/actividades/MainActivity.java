@@ -188,7 +188,8 @@ public class MainActivity extends AppCompatActivity {
 
         } else if (itemId == R.id.opcMejoresResultados) {
             // @TODO Mejores resultados
-            new DeleteScoresAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
+            //new DeleteScoresAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
+            getTop10Scores();
         } else {
             Snackbar.make(
                     findViewById(android.R.id.content),
@@ -358,5 +359,14 @@ public class MainActivity extends AppCompatActivity {
     public void deleteScores(){
         finalScoreRepository.finalScoreDAO().deleteAll();
         finalScores = finalScoreRepository.finalScoreDAO().getAll();
+    }
+
+    private void getTop10Scores(){
+        List<FinalScore> top10;
+        top10 = finalScoreRepository.finalScoreDAO().getTop10Scores();
+        Log.i(LOG_TAG, "TOP10: top 10 mejores partidas:");
+        for (FinalScore f : top10){
+            Log.i(LOG_TAG, "\t - " + f.toString());
+        }
     }
 }

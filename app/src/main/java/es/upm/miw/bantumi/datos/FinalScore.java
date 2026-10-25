@@ -59,4 +59,15 @@ public class FinalScore {
     public void setSeedsPlayer2(int seedsPlayer2) {
         this.seedsPlayer2 = seedsPlayer2;
     }
+
+    @Override
+    public String toString() {
+        return "FinalScore{" +
+                "playerName='" + playerName + '\'' +
+                ", timeStamp=" + timeStamp +
+                ", seedsPlayer1=" + seedsPlayer1 +
+                ", seedsPlayer2=" + seedsPlayer2 +
+                ", id='" + id + '\'' +
+                '}';
+    }
 }

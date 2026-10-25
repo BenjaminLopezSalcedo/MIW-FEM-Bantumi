@@ -16,6 +16,10 @@ public interface FinalScoreDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insert(FinalScore finalScore);
 
+    @Query("SELECT * FROM " + FinalScore.TABLA + " ORDER BY MAX(seedsPlayer1,seedsPlayer2) DESC LIMIT 10")
+    List<FinalScore> getTop10Scores();
+
+
     @Query("DELETE FROM " + FinalScore.TABLA)
     void deleteAll();
 
