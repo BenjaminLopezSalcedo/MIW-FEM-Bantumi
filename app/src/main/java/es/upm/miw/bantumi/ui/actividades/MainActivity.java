@@ -1,6 +1,8 @@
 package es.upm.miw.bantumi.ui.actividades;
 
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -16,6 +18,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 import androidx.room.Room;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -71,6 +74,19 @@ public class MainActivity extends AppCompatActivity {
                 )
                 .allowMainThreadQueries()
                 .build();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String prefPlayerName =preferences.getString(
+                getString(R.string.key_PlayerName),
+                getString(R.string.defaultName)
+        );
+
+        Log.i(LOG_TAG, "onRESUME():\n - Firma = " + prefPlayerName);
     }
 
     /**
@@ -157,8 +173,8 @@ public class MainActivity extends AppCompatActivity {
                     .setMessage(R.string.aboutMessage)
                     .setPositiveButton(android.R.string.ok, null)
                     .show();
-            // } else if (itemId == R.id.opcAjustes) { // @TODO Preferencias
-            // startActivity(new Intent(this, BantumiPrefs.class));
+        } else if (itemId == R.id.opcAjustes) {
+            startActivity(new Intent(this, BantumiPrefs.class));
 
         } else if (itemId == R.id.opcReiniciarPartida) {
             new RestartAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
@@ -308,8 +324,15 @@ public class MainActivity extends AppCompatActivity {
      * Se guarda la puntuación en la base de datos
      */
     private void saveScore(){
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String playerName = prefs.getString(
+                getString(R.string.key_PlayerName),
+                getString(R.string.defaultName)
+        );
+
         finalScoreRepository.finalScoreDAO().insert(new FinalScore(
-                "PlaceHolder",
+                playerName,
                 LocalDateTime.now(),
                 juegoBantumi.getSemillas(6),
                 juegoBantumi.getSemillas(13)
