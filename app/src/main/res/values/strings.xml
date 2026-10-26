@@ -67,5 +67,6 @@
     <string name="colDayAndHour">Fecha</string>
     <string name="colScore">Puntuación</string>
     <string name="txtEmptyScoreDB">No hay puntuaciones registradas</string>
+    <string name="txtOpcionDeleteScores">Delete Scores</string>
 
 </resources>
