@@ -1,6 +1,8 @@
 package es.upm.miw.bantumi.ui.actividades;
 
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -16,14 +18,27 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
+import androidx.room.Room;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
+import es.upm.miw.bantumi.datos.FinalScore;
+import es.upm.miw.bantumi.datos.FinalScoreRepository;
+import es.upm.miw.bantumi.ui.fragmentos.DeleteScoresAlertDialog;
 import es.upm.miw.bantumi.ui.fragmentos.FinalAlertDialog;
 import es.upm.miw.bantumi.R;
 import es.upm.miw.bantumi.dominio.logica.JuegoBantumi;
+import es.upm.miw.bantumi.ui.fragmentos.LoadSaveDialog;
+import es.upm.miw.bantumi.ui.fragmentos.RestartAlertDialog;
 import es.upm.miw.bantumi.ui.viewmodel.BantumiViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     public JuegoBantumi juegoBantumi;
     private BantumiViewModel bantumiVM;
     int numInicialSemillas;
+    FinalScoreRepository finalScoreRepository;
+    List<FinalScore> finalScores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +67,27 @@ public class MainActivity extends AppCompatActivity {
         bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
         juegoBantumi = new JuegoBantumi(bantumiVM, JuegoBantumi.Turno.turnoJ1, numInicialSemillas);
         crearObservadores();
+
+        finalScoreRepository = Room.databaseBuilder(
+                        getApplicationContext(),
+                        FinalScoreRepository.class,
+                        FinalScoreRepository.DATA_BASE
+                )
+                .allowMainThreadQueries()
+                .build();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String prefPlayerName =preferences.getString(
+                getString(R.string.key_PlayerName),
+                getString(R.string.defaultName)
+        );
+
+        Log.i(LOG_TAG, "onRESUME():\n - Firma = " + prefPlayerName);
     }
 
     /**
@@ -136,9 +174,23 @@ public class MainActivity extends AppCompatActivity {
                     .setMessage(R.string.aboutMessage)
                     .setPositiveButton(android.R.string.ok, null)
                     .show();
-        // } else if (itemId == R.id.opcAjustes) { // @TODO Preferencias
-            // startActivity(new Intent(this, BantumiPrefs.class));
-        // @TODO!!! resto opciones
+        } else if (itemId == R.id.opcAjustes) {
+            startActivity(new Intent(this, BantumiPrefs.class));
+
+        } else if (itemId == R.id.opcReiniciarPartida) {
+            new RestartAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
+
+        } else if (itemId == R.id.opcGuardarPartida) {
+            saveGame();
+
+        } else if (itemId == R.id.opcRecuperarPartida) {
+            new LoadSaveDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
+
+        } else if (itemId == R.id.opcMejoresResultados) {
+
+            getTop10Scores();
+            startActivity(new Intent(this, BestScoresActivity.class));
+
         } else {
             Snackbar.make(
                     findViewById(android.R.id.content),
@@ -150,6 +202,98 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Devuelve el nombre del fichero
+     *
+     * @return nombre del fichero
+     */
+    private String getFileName() {
+        String nombreFichero = getResources().getString(R.string.default_NombreFich);
+        Log.i(LOG_TAG, "Nombre fichero: " + nombreFichero);
+
+        return nombreFichero;
+    }
+
+    /**
+     * Guarda los datos serializados de la partida en un fichero
+     */
+    public void saveGame() {
+
+        try {  // Añadir partida al fichero
+            FileOutputStream fos;
+
+            // Abrimos fichero de guardado
+            fos = openFileOutput(getFileName(), MODE_PRIVATE); // Memoria interna
+            fos.write(juegoBantumi.serializa().getBytes()); //Escribimos en fichero de guardado
+            fos.close(); //Cerramos el fichero
+
+            //Notificamos que se ha guardado correctamente
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.txtSaveGame),
+                    Snackbar.LENGTH_LONG
+            ).show();
+
+            Log.i(LOG_TAG, "Click botón Guardar -> GUARDAR partida");
+        } catch (Exception e) {
+
+            //Notificamos de un error al guardar
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.txtSaveGameError),
+                    Snackbar.LENGTH_LONG
+            ).show();
+
+            Log.e(LOG_TAG, "FILE I/O ERROR: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Carga la partida guardada en el fichero Bantumi_savefile
+     * <p>
+     * Si está vacío → mostrar un Toast
+     */
+    public void loadSaveFile() {
+        boolean hasContent = false;
+        BufferedReader fin;
+
+        try {   // Leer fichero y mostrarlo en TextView
+            //Abrimos lectura
+            fin = new BufferedReader(
+                    new InputStreamReader(openFileInput(getFileName()))); // Memoria interna
+
+            String linea = fin.readLine(); // Procesar contenido fichero
+
+            if(linea!=null){ //Confirma que hay contenido
+                juegoBantumi.deserializa(linea); //Desserializa para cargar partida
+                hasContent = true;
+
+                Snackbar.make(
+                        findViewById(android.R.id.content),
+                        getString(R.string.txtLoadFile),
+                        Snackbar.LENGTH_SHORT
+                ).show();
+                Log.i(LOG_TAG, "LOAD -> Partida recuperada y cargada correctamente");
+            }
+            fin.close(); //Cerramos lectura
+
+        } catch (Exception e) {
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.txtLoadFileError),
+                    Snackbar.LENGTH_SHORT
+            ).show();
+            Log.e(LOG_TAG, "FILE I/O ERROR: " + e.getMessage());
+        }
+        if (!hasContent) {
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.txtEmptyFile),
+                    Snackbar.LENGTH_SHORT
+            ).show();
+        }
+    }
+
+    /**
      * Acción que se ejecuta al pulsar sobre cualquier hueco
      *
      * @param v Vista pulsada (hueco)
@@ -157,6 +301,9 @@ public class MainActivity extends AppCompatActivity {
     public void huecoPulsado(@NonNull View v) {
         String resourceName = getResources().getResourceEntryName(v.getId()); // pXY
         int num = Integer.parseInt(resourceName.substring(resourceName.length() - 2));
+
+        boolean finishedGame = juegoBantumi.juegoTerminado();
+
         Log.i(LOG_TAG, "huecoPulsado(" + resourceName + ") num=" + num);
         switch (juegoBantumi.turnoActual()) {
             case turnoJ1:
@@ -168,11 +315,31 @@ public class MainActivity extends AppCompatActivity {
                 juegoBantumi.juegaComputador();
                 break;
             default:    // JUEGO TERMINADO
-                finJuego();
+                break;
         }
         if (juegoBantumi.juegoTerminado()) {
+            if(!finishedGame) saveScore();
             finJuego();
         }
+    }
+
+    /**
+     * Se guarda la puntuación en la base de datos
+     */
+    private void saveScore(){
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String playerName = prefs.getString(
+                getString(R.string.key_PlayerName),
+                getString(R.string.defaultName)
+        );
+
+        finalScoreRepository.finalScoreDAO().insert(new FinalScore(
+                playerName,
+                LocalDateTime.now(),
+                juegoBantumi.getSemillas(6),
+                juegoBantumi.getSemillas(13)
+        ));
     }
 
     /**
@@ -186,9 +353,21 @@ public class MainActivity extends AppCompatActivity {
             texto = "¡¡¡ EMPATE !!!";
         }
 
-        // @TODO guardar puntuación
-
         // terminar
         new FinalAlertDialog(texto).show(getSupportFragmentManager(), "ALERT_DIALOG");
+    }
+
+    public void deleteScores(){
+        finalScoreRepository.finalScoreDAO().deleteAll();
+        finalScores = finalScoreRepository.finalScoreDAO().getAll();
+    }
+
+    private void getTop10Scores(){
+        List<FinalScore> top10;
+        top10 = finalScoreRepository.finalScoreDAO().getTop10Scores();
+        Log.i(LOG_TAG, "TOP10: top 10 mejores partidas:");
+        for (FinalScore f : top10){
+            Log.i(LOG_TAG, "\t - " + f.toString());
+        }
     }
 }

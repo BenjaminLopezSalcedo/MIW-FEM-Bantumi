@@ -32,6 +32,7 @@ android {
 
 dependencies {
     api(libs.material)
+    implementation(libs.androidx.preference)
 
     implementation(libs.appcompat)
 	
@@ -44,4 +45,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata)
 
     implementation(libs.androidx.lifecycle.livedata.core)
+
+    // Room
+    implementation(libs.roomCommon)
+    annotationProcessor(libs.roomCompiler)
+    implementation(libs.roomRuntime)
 }
