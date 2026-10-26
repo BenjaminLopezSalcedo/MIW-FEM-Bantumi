@@ -25,6 +25,11 @@
             android:name=".ui.actividades.BantumiPrefs"
             android:label="@string/preferencesText"
             android:parentActivityName=".ui.actividades.MainActivity" />
+        <activity
+            android:name=".ui.actividades.BestScoresActivity"
+            android:exported="false"
+            android:label="@string/txtOpcionMejoresResultados"
+            android:parentActivityName=".ui.actividades.MainActivity" />
     </application>
 
 </manifest>
