@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -63,7 +65,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Instancia el ViewModel y el juego, y asigna observadores a los huecos
-        numInicialSemillas = getResources().getInteger(R.integer.intNumInicialSemillas);
+        numInicialSemillas = prefs.getInt(
+                getString(R.string.key_SeedNumber),
+                getResources().getInteger(R.integer.intNumInicialSemillas));
+
         bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
         juegoBantumi = new JuegoBantumi(bantumiVM, JuegoBantumi.Turno.turnoJ1, numInicialSemillas);
         crearObservadores();
@@ -75,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
                 )
                 .allowMainThreadQueries()
                 .build();
+
+        Log.i(LOG_TAG, "onCREATE(): pantalla creada");
     }
 
     @Override
@@ -82,12 +89,20 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String prefPlayerName =preferences.getString(
+        String prefPlayerName = preferences.getString(
                 getString(R.string.key_PlayerName),
                 getString(R.string.defaultName)
         );
+        int prefSeedNumber = preferences.getInt(
+                getString(R.string.key_SeedNumber),
+                getResources().getInteger(R.integer.intNumInicialSemillas));
 
-        Log.i(LOG_TAG, "onRESUME():\n - Firma = " + prefPlayerName);
+        juegoBantumi.setNumInicialSemillas(prefSeedNumber);
+
+        Log.i(LOG_TAG, "onRESUME():" +
+                "\n - Player name = " + prefPlayerName +
+                "\n - Seed number = " + prefSeedNumber
+        );
     }
 
     /**
@@ -187,7 +202,6 @@ public class MainActivity extends AppCompatActivity {
             new LoadSaveDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
 
         } else if (itemId == R.id.opcMejoresResultados) {
-
             getTop10Scores();
             startActivity(new Intent(this, BestScoresActivity.class));
 

@@ -27,7 +27,6 @@
             android:key="@string/key_ChooseFirstPlayer"
             android:dependency="@string/key_RandomPlayer"
             android:title="@string/prefTituloFirstPlayer"
-            android:dialogMessage="@string/prefTextoFirstPlayer"
             android:entries="@array/players"
             android:entryValues="@array/playerValues"
             android:defaultValue="1"
@@ -37,9 +36,14 @@
             android:key="@string/key_SeedNumber"
             android:title="@string/prefTituloSeedNumber"
             android:defaultValue="4"
-            android:min="1"
+            app:min="1"
             android:max="10"
             app:showSeekBarValue="true" />
+
+        <Preference
+            android:summary="@string/prefTextoSettingsInfo"
+            android:selectable="false"
+            />
 
     </PreferenceCategory>
 

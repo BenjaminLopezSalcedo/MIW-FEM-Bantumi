@@ -38,4 +38,10 @@ public class BantumiPrefs extends AppCompatActivity {
             setPreferencesFromResource(R.xml.preferences_settings, rootKey);
         }
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
 }
