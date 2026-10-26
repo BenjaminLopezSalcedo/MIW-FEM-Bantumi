@@ -35,7 +35,7 @@ public class FinalAlertDialog extends DialogFragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 main.juegoBantumi.inicializar(
-                                        JuegoBantumi.Turno.turnoJ1,
+                                        main.getTurnoInicial(),
                                         main.juegoBantumi.getNumInicialSemillas()
                                 );
                             }
