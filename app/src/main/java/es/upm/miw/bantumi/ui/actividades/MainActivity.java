@@ -187,8 +187,7 @@ public class MainActivity extends AppCompatActivity {
             new LoadSaveDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
 
         } else if (itemId == R.id.opcMejoresResultados) {
-            // @TODO Mejores resultados
-            //new DeleteScoresAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
+
             getTop10Scores();
             startActivity(new Intent(this, BestScoresActivity.class));
 

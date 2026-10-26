@@ -11,15 +11,22 @@ import androidx.fragment.app.DialogFragment;
 import es.upm.miw.bantumi.R;
 import es.upm.miw.bantumi.datos.FinalScore;
 import es.upm.miw.bantumi.dominio.logica.JuegoBantumi;
+import es.upm.miw.bantumi.ui.actividades.BestScoresActivity;
 import es.upm.miw.bantumi.ui.actividades.MainActivity;
 
 public class DeleteScoresAlertDialog extends DialogFragment {
+
+    public interface OnDeleteConfirmedListener {
+        void onDeleteConfirmed();
+    }
+
     @NonNull
     @Override
     public AppCompatDialog onCreateDialog(Bundle savedInstanceState){
-        final MainActivity main = (MainActivity) requireActivity();
+        final OnDeleteConfirmedListener listener =
+                (OnDeleteConfirmedListener) requireActivity();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(main);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder
                 .setTitle(R.string.txtDialogoDeleteScores)
                 .setMessage(R.string.txtDialogoDeleteScoresPregunta)
@@ -28,7 +35,7 @@ public class DeleteScoresAlertDialog extends DialogFragment {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                main.deleteScores();
+                                listener.onDeleteConfirmed();
                             }
                         }
                 )
