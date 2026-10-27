@@ -310,6 +310,7 @@ public class MainActivity extends AppCompatActivity {
                     Snackbar.LENGTH_SHORT
             ).show();
             Log.e(LOG_TAG, "FILE I/O ERROR: " + e.getMessage());
+            return;
         }
         if (!hasContent) {
             Snackbar.make(
