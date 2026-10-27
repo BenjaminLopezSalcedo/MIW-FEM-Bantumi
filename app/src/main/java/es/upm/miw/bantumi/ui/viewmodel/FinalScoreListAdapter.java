@@ -57,9 +57,15 @@ public class FinalScoreListAdapter extends RecyclerView.Adapter<FinalScoreListAd
     public void onBindViewHolder(@NonNull ScoreViewHolder holder, int position) {
         if (scores != null) {
             FinalScore current = scores.get(position);
+
+            int s1 = current.getSeedsPlayer1();
+            int s2 = current.getSeedsPlayer2();
+            int total = s1 + s2;
+            int percent = (total == 0) ? 0 : Math.round(100f * Math.max(s1, s2) / total);
+
             holder.tvName.setText(current.getPlayerName());
             holder.tvDate.setText(current.getTimeStamp().format(FMT));
-            holder.tvScore.setText(current.getSeedsPlayer1() + " - " + current.getSeedsPlayer2());
+            holder.tvScore.setText(s1 + " - " + s2 + " (" + percent + "%)");
         } else {
 
         }
