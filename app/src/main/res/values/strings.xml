@@ -49,11 +49,15 @@
     <string name="prefTituloRandomPlayer">Jugador inicial aleatorio</string>
     <string name="prefTituloSeedNumber">Numero inicial de semillas</string>
     <string name="prefTextoSettingsInfo">Los ajustes afectarán a las siguientes partidas una vez finalice la actual o se inicie una nueva.</string>
+    <string name="prefTituloRepositorio">Código fuente</string>
+    <string name="prefTextoRepositorio">Ver el repositorio del proyecto en GitHub</string>
+    <string name="prefTituloVersion">Versión</string>
         <!-- Keys -->
         <string name="key_PlayerName">playerName</string>
         <string name="key_SeedNumber">seedNumber</string>
         <string name="key_RandomPlayer">randomPlayer</string>
         <string name="key_ChooseFirstPlayer">firstPlayer</string>
+        <string name="key_Version">version</string>
 
     <!-- Diálogo Final -->
     <string name="txtDialogoFinalTitulo">Fin del juego</string>
