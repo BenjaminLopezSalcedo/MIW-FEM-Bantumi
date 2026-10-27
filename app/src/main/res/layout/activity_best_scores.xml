@@ -22,6 +22,15 @@
             android:padding="12dp">
 
             <TextView
+                android:text="@string/colPosition"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:textColor="@color/teal_700"
+                android:textStyle="bold" />
+
+            <TextView
                 android:text="@string/colName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -33,7 +42,7 @@
                 android:text="@string/colScore"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="4"
                 android:textColor="@color/teal_700"
                 android:textStyle="bold" />
 
@@ -41,7 +50,7 @@
                 android:text="@string/colDayAndHour"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="4"
                 android:textColor="@color/teal_700"
                 android:textStyle="bold" />
 
