@@ -76,7 +76,7 @@
     <string name="txtEmptyFile">No se encuentran partidas guardadas</string>
 
     <!-- Mejores resultados -->
-    <string name="colName">Nombre jugador</string>
+    <string name="colName">Jugador</string>
     <string name="colScore">Puntuación</string>
     <string name="colDayAndHour">Fecha</string>
     <string name="txtEmptyScoreDB">No hay puntuaciones registradas</string>
