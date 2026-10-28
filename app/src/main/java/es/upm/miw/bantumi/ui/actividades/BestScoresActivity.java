@@ -79,8 +79,20 @@ public class BestScoresActivity extends AppCompatActivity
         if (item.getItemId() == R.id.opcBorrarResultados) {
             new DeleteScoresAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
             return true;
+        } else if (item.getItemId() == R.id.opcFiltrarJugador) {
+            getTop10ScoresFiltered();
+            return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void getTop10ScoresFiltered(){
+        List<FinalScore> top10;
+        top10 = db.finalScoreDAO().getTop10ScoresFiltered("%");
+        Log.i(LOG_TAG, "TOP10: top 10 mejores partidas:");
+        for (FinalScore f : top10){
+            Log.i(LOG_TAG, "\t - " + f.toString());
+        }
     }
 
     @Override
