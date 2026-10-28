@@ -63,4 +63,12 @@
     <color name="md_theme_dark_surfaceTint">#FFB86F</color>
     <color name="md_theme_dark_outlineVariant">#51453A</color>
     <color name="md_theme_dark_scrim">#000000</color>
+
+    <!-- Colores Top10 -->
+    <color name="gold">#FFC107</color>
+    <color name="silver">#9E9E9E</color>
+    <color name="bronze">#CD7F32</color>
+    <color name="list_background">#15000000</color>
+
+
 </resources>

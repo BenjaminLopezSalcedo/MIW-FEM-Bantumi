@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:title="@string/prefTituloCategoria1">
+
+        <EditTextPreference
+            android:key="@string/key_PlayerName"
+            android:title="@string/prefTituloNombreJugador"
+            android:dialogMessage="@string/prefTextoNombreJugador"
+            android:defaultValue="@string/defaultName"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/prefTituloCategoria2">
+
+        <SwitchPreference
+            android:key="@string/key_RandomPlayer"
+            android:title="@string/prefTituloRandomPlayer"
+            android:defaultValue="false"
+            android:disableDependentsState="true"/>
+
+        <ListPreference
+            android:key="@string/key_ChooseFirstPlayer"
+            android:dependency="@string/key_RandomPlayer"
+            android:title="@string/prefTituloFirstPlayer"
+            android:entries="@array/players"
+            android:entryValues="@array/playerValues"
+            android:defaultValue="1"
+            app:useSimpleSummaryProvider="true"/>
+
+        <SeekBarPreference
+            android:key="@string/key_SeedNumber"
+            android:title="@string/prefTituloSeedNumber"
+            android:defaultValue="4"
+            app:min="1"
+            android:max="10"
+            app:showSeekBarValue="true" />
+
+        <Preference
+            android:summary="@string/prefTextoSettingsInfo"
+            android:selectable="false"
+            />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/prefTituloCategoria3">
+
+        <Preference
+            android:title="@string/prefTituloRepositorio"
+            android:summary="@string/prefTextoRepositorio">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/BenjaminLopezSalcedo/MIW-FEM-Bantumi" />
+        </Preference>
+
+        <Preference
+            android:key="@string/key_Version"
+            android:title="@string/prefTituloVersion"
+            android:selectable="false" />
+
+    </PreferenceCategory>
+</PreferenceScreen>
