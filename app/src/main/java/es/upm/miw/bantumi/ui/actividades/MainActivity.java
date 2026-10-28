@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -63,9 +65,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Instancia el ViewModel y el juego, y asigna observadores a los huecos
-        numInicialSemillas = getResources().getInteger(R.integer.intNumInicialSemillas);
+        numInicialSemillas = prefs.getInt(
+                getString(R.string.key_SeedNumber),
+                getResources().getInteger(R.integer.intNumInicialSemillas));
+
         bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
-        juegoBantumi = new JuegoBantumi(bantumiVM, JuegoBantumi.Turno.turnoJ1, numInicialSemillas);
+        juegoBantumi = new JuegoBantumi(bantumiVM, getTurnoInicial(), numInicialSemillas);
         crearObservadores();
 
         finalScoreRepository = Room.databaseBuilder(
@@ -75,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
                 )
                 .allowMainThreadQueries()
                 .build();
+
+        Log.i(LOG_TAG, "onCREATE(): pantalla creada");
     }
 
     @Override
@@ -82,12 +89,33 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String prefPlayerName =preferences.getString(
+        String prefPlayerName = preferences.getString(
                 getString(R.string.key_PlayerName),
                 getString(R.string.defaultName)
         );
+        int prefSeedNumber = preferences.getInt(
+                getString(R.string.key_SeedNumber),
+                getResources().getInteger(R.integer.intNumInicialSemillas));
 
-        Log.i(LOG_TAG, "onRESUME():\n - Firma = " + prefPlayerName);
+        juegoBantumi.setNumInicialSemillas(prefSeedNumber);
+
+        boolean prefRandom = preferences.getBoolean(
+                getString(R.string.key_RandomPlayer), false);
+
+        JuegoBantumi.Turno prefTurno = (
+                preferences.getString(getString(R.string.key_ChooseFirstPlayer)
+                        , "1").equals("1"))
+                ? JuegoBantumi.Turno.turnoJ1
+                : JuegoBantumi.Turno.turnoJ2;
+
+        Log.i(LOG_TAG, "onRESUME():" +
+                "\n - Player name = " + prefPlayerName +
+                "\n - Seed number = " + prefSeedNumber +
+                "\n - Random player = " + prefRandom +
+                "\n - Initial player = " + (prefRandom
+                ? "random"
+                : prefTurno)
+        );
     }
 
     /**
@@ -187,7 +215,6 @@ public class MainActivity extends AppCompatActivity {
             new LoadSaveDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
 
         } else if (itemId == R.id.opcMejoresResultados) {
-
             getTop10Scores();
             startActivity(new Intent(this, BestScoresActivity.class));
 
@@ -283,6 +310,7 @@ public class MainActivity extends AppCompatActivity {
                     Snackbar.LENGTH_SHORT
             ).show();
             Log.e(LOG_TAG, "FILE I/O ERROR: " + e.getMessage());
+            return;
         }
         if (!hasContent) {
             Snackbar.make(
@@ -346,10 +374,12 @@ public class MainActivity extends AppCompatActivity {
      * El juego ha terminado. Volver a jugar?
      */
     private void finJuego() {
-        String texto = (juegoBantumi.getSemillas(6) > 6 * numInicialSemillas)
+        int semillasJ1 = juegoBantumi.getSemillas(6);
+        int semillasJ2 = juegoBantumi.getSemillas(13);
+        String texto = (semillasJ1 > semillasJ2)
                 ? "Gana Jugador 1"
                 : "Gana Jugador 2";
-        if (juegoBantumi.getSemillas(6) == 6 * numInicialSemillas) {
+        if (semillasJ1 == semillasJ2) {
             texto = "¡¡¡ EMPATE !!!";
         }
 
@@ -368,6 +398,27 @@ public class MainActivity extends AppCompatActivity {
         Log.i(LOG_TAG, "TOP10: top 10 mejores partidas:");
         for (FinalScore f : top10){
             Log.i(LOG_TAG, "\t - " + f.toString());
+        }
+    }
+
+    public JuegoBantumi.Turno getTurnoInicial(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        boolean rndPlayer = preferences.getBoolean(
+                getString(R.string.key_RandomPlayer),
+                false
+        );
+
+        if (rndPlayer){
+            return (Math.random() < 0.5)
+                    ? JuegoBantumi.Turno.turnoJ1
+                    : JuegoBantumi.Turno.turnoJ2;
+        } else {
+            return (preferences.getString(
+                    getString(R.string.key_ChooseFirstPlayer)
+                    , "1").equals("1"))
+                    ? JuegoBantumi.Turno.turnoJ1
+                    : JuegoBantumi.Turno.turnoJ2;
         }
     }
 }

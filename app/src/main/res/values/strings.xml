@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Bantumi</string>
 
+    <!-- Jugadores -->
     <string name="txtPlayer1">Jugador 1</string>
     <string name="txtPlayer2">Jugador 2</string>
     <string name="txtBtnReset">Reset</string>
@@ -17,6 +18,7 @@
     <string name="txtOpcionGuardar">Guardar Partida</string>
     <string name="txtOpcionRecuperar">Recuperar Partida</string>
     <string name="txtOpcionMejoresResultados">Mejores Resultados</string>
+    <string name="txtOpcionDeleteScores">Delete Scores</string>
 
     <!-- Acerca de -->
     <string name="aboutText">Acerca de</string>
@@ -37,36 +39,57 @@
 
     <!-- Preferencias -->
     <string name="preferencesText">Ajustes</string>
-    <string name="prefTituloCategoria1">Datos personales</string>
-    <string name="prefTituloNombreJugador">Nombre del jugador</string>
+    <string name="prefTituloCategoria1">Ajustes del usuario</string>
+    <string name="prefTituloNombreJugador">Nombre del jugador:</string>
     <string name="prefTextoNombreJugador">Pulse para teclear el nombre del jugador</string>
     <string name="prefTituloCategoria2">Ajustes del juego</string>
     <string name="prefTituloCategoria3">Más información…</string>
+    <string name="defaultName">Jugador 1</string>
+    <string name="prefTituloFirstPlayer">Jugador inicial:</string>
+    <string name="prefTituloRandomPlayer">Jugador inicial aleatorio</string>
+    <string name="prefTituloSeedNumber">Numero inicial de semillas</string>
+    <string name="prefTextoSettingsInfo">Los ajustes afectarán a las siguientes partidas una vez finalice la actual o se inicie una nueva.</string>
+    <string name="prefTituloRepositorio">Código fuente</string>
+    <string name="prefTextoRepositorio">Ver el repositorio del proyecto en GitHub</string>
+    <string name="prefTituloVersion">Versión</string>
+        <!-- Keys -->
+        <string name="key_PlayerName">playerName</string>
+        <string name="key_SeedNumber">seedNumber</string>
+        <string name="key_RandomPlayer">randomPlayer</string>
+        <string name="key_ChooseFirstPlayer">firstPlayer</string>
+        <string name="key_Version">version</string>
 
     <!-- Diálogo Final -->
     <string name="txtDialogoFinalTitulo">Fin del juego</string>
     <string name="txtDialogoFinalPregunta">¿Desea jugar otra partida?</string>
-    <string name="txtDialogoRestartPregunta">¿Estas seguro de querer reiniciar la partida?</string>
+
+    <!-- Diálogo Reiniciar -->
     <string name="txtDialogoRestartTitle">Reiniciar partida</string>
+    <string name="txtDialogoRestartPregunta">¿Estas seguro de querer reiniciar la partida?</string>
+
+    <!-- Guardar partida -->
     <string name="default_NombreFich">Bantumi_savefile</string>
     <string name="txtSaveGame">Se ha guardado la partida correctamente</string>
     <string name="txtSaveGameError">Ha ocurrido un error al intentar guardar partida</string>
-    <string name="txtEmptyFile">No se encuentran partidas guardadas</string>
-    <string name="txtLoadFile">Se ha cargado la partida correctamente</string>
-    <string name="txtLoadFileError">Ha ocurrido un error al intentar cargar la partida</string>
+
+    <!-- Recuperar partida -->
     <string name="txtDialogoLoadTitle">Cargar partida</string>
     <string name="txtDialogoLoadPregunta">¿Quieres recuperar la partida guardada?</string>
-    <string name="user_settings">Ajustes del usuario</string>
-    <string name="key_PlayerName">playerName</string>
-    <string name="title_PlayerName">Nombre del jugador:</string>
-    <string name="defaultName">Jugador 1</string>
-    <string name="title_activity_preference_settings">PreferenceSettingsActivity</string>
+    <string name="txtLoadFile">Se ha cargado la partida correctamente</string>
+    <string name="txtLoadFileError">Ha ocurrido un error al intentar cargar la partida</string>
+    <string name="txtEmptyFile">No se encuentran partidas guardadas</string>
+
+    <!-- Mejores resultados -->
+    <string name="colName">Jugador</string>
+    <string name="colScore">Puntuación</string>
+    <string name="colDayAndHour">Fecha</string>
+    <string name="txtEmptyScoreDB">No hay puntuaciones registradas</string>
+
+    <!-- Diálogo Borrar puntuaciones -->
     <string name="txtDialogoDeleteScores">Borrar tabla de puntuaciones</string>
     <string name="txtDialogoDeleteScoresPregunta">¿Quieres borrar todas las puntuaciones guardadas de anteriores partidas?</string>
-    <string name="colName">Nombre jugador</string>
-    <string name="colDayAndHour">Fecha</string>
-    <string name="colScore">Puntuación</string>
-    <string name="txtEmptyScoreDB">No hay puntuaciones registradas</string>
-    <string name="txtOpcionDeleteScores">Delete Scores</string>
+    <string name="colPosition">#</string>
+    <string name="txtOpcionFiltrar">Filtrar por jugador</string>
+    <string name="txtTodos">Todos</string>
 
 </resources>
