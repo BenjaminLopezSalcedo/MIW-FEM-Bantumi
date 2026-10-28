@@ -16,7 +16,7 @@ Repositorio: https://github.com/BenjaminLopezSalcedo/MIW-FEM-Bantumi
 | 4 | Guardar puntuación | Hecho |
 | 5 | Mejores resultados | Hecho |
 
-> **Nota:** Varios de los issues obligatorios tienen parte de su lógica modificada por las mejoras opcionales (número de semillas y jugador inicial configurables), asegurando su correcto funcionamiento en todos los casos.
+> **Nota:** Varios de los issues obligatorios tienen parte de su lógica modificada por las mejoras opcionales (número de semillas y jugador inicial configurables, filtro por jugador), asegurando su correcto funcionamiento en todos los casos.
 
 ---
 
@@ -66,6 +66,7 @@ Opción "Mejores resultados" del menú. Pantalla (`BestScoresActivity`) con un `
 
 - **Cambio de la query:** La consulta de obtención del Top 10 varía respecto a lo pedido ya que se adapta al número inicial de semillas en vez de calificar por el mayor número de semillas de cualquier jugador. Esto ordena por porcentaje de victoria en lugar de semillas absolutas.
 - **Criterio de ordenación:** El ranking se ordena primero por el porcentaje de semillas del ganador sobre el total de la partida y, en caso de empate, por sus semillas absolutas. Se hace así porque el número inicial de semillas es configurable (de 1 a 10 por casilla, mejora opcional #1) y el total varía entre partidas, por lo que comparar solo semillas absolutas no sería equitativo. El porcentaje se muestra junto a cada resultado.
+- **Consulta filtrada:** La pantalla obtiene los resultados con `getTop10ScoresFiltered(...)`, que aplica el mismo criterio de ordenación y añade el filtro por jugador (mejora opcional #5). La consulta original `getTop10Scores()` se mantiene solo para registrar el Top 10 en el log con fines de depuración.
 
 ---
 
@@ -88,6 +89,13 @@ Numeración de posiciones, colores oro/plata/bronce para los tres primeros, fond
 ### 4. Pantalla de información en los ajustes
 
 Enlace al repositorio de GitHub y versión de la aplicación leída del `PackageManager`.
+
+### 5. Filtro de mejores resultados por jugador
+
+Icono de filtro en la barra superior de "Mejores resultados" que abre un diálogo (`PlayerFilterDialog`) con la lista de jugadores guardados y la opción "Todos". Al elegir uno, el Top 10 muestra solo las partidas de ese jugador.
+
+- **Observación:** El filtro se aplica con un `LIKE` sobre el nombre, usando `%` para "Todos". Al borrar los resultados, el filtro se restablece.
+- **Observación:** Si hay más de 8 opciones, el diálogo limita su altura y la lista hace scroll.
 
 ---
 
