@@ -68,5 +68,7 @@
     <color name="gold">#FFC107</color>
     <color name="silver">#9E9E9E</color>
     <color name="bronze">#CD7F32</color>
+    <color name="list_background">#15000000</color>
+
 
 </resources>

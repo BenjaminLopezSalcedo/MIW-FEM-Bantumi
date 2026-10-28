@@ -22,6 +22,7 @@ import es.upm.miw.bantumi.R;
 import es.upm.miw.bantumi.datos.FinalScore;
 import es.upm.miw.bantumi.datos.FinalScoreRepository;
 import es.upm.miw.bantumi.ui.fragmentos.DeleteScoresAlertDialog;
+import es.upm.miw.bantumi.ui.fragmentos.PlayerFilterDialog;
 import es.upm.miw.bantumi.ui.viewmodel.FinalScoreListAdapter;
 
 public class BestScoresActivity extends AppCompatActivity
@@ -81,14 +82,19 @@ public class BestScoresActivity extends AppCompatActivity
             return true;
         } else if (item.getItemId() == R.id.opcFiltrarJugador) {
             getTop10ScoresFiltered();
+            new PlayerFilterDialog().show(getSupportFragmentManager(), "FILTER_DIALOG");
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    public List<String> getPlayerNames() {
+        return db.finalScoreDAO().getPlayers();
+    }
+
     private void getTop10ScoresFiltered(){
         List<FinalScore> top10;
-        top10 = db.finalScoreDAO().getTop10ScoresFiltered("%");
+        top10 = db.finalScoreDAO().getTop10ScoresFiltered(filtroJugador);
         Log.i(LOG_TAG, "TOP10: top 10 mejores partidas:");
         for (FinalScore f : top10){
             Log.i(LOG_TAG, "\t - " + f.toString());
@@ -104,10 +110,14 @@ public class BestScoresActivity extends AppCompatActivity
         Log.i(LOG_TAG, "DELETE: Se han borrado las puntuaciones");
     }
 
-    private void cargarScores() {
+    public void cargarScores() {
         List<FinalScore> scores = db.finalScoreDAO().getTop10ScoresFiltered(filtroJugador);
         adapter.setScores(scores);
         tvEmpty.setVisibility(scores.isEmpty() ? View.VISIBLE : View.GONE);
+    }
+
+    public void setFiltroJugador(String filtroJugador) {
+        this.filtroJugador = filtroJugador;
     }
 
     @Override

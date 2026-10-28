@@ -90,5 +90,6 @@
     <string name="txtDialogoDeleteScoresPregunta">¿Quieres borrar todas las puntuaciones guardadas de anteriores partidas?</string>
     <string name="colPosition">#</string>
     <string name="txtOpcionFiltrar">Filtrar por jugador</string>
+    <string name="txtTodos">Todos</string>
 
 </resources>
