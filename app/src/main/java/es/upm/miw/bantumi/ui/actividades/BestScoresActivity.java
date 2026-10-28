@@ -10,14 +10,11 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -35,6 +32,8 @@ public class BestScoresActivity extends AppCompatActivity
     private FinalScoreRepository db;
     private FinalScoreListAdapter adapter;
     private TextView tvEmpty;
+
+    private String filtroJugador = "%";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +65,7 @@ public class BestScoresActivity extends AppCompatActivity
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<FinalScore> scores = db.finalScoreDAO().getTop10Scores();
-
-        adapter.setScores(scores);
-        tvEmpty.setVisibility(scores.isEmpty() ? View.VISIBLE : View.GONE);
+        cargarScores();
     }
 
     @Override
@@ -90,10 +86,16 @@ public class BestScoresActivity extends AppCompatActivity
     @Override
     public void onDeleteConfirmed() {
         db.finalScoreDAO().deleteAll();
-        adapter.setScores(db.finalScoreDAO().getTop10Scores());
-        tvEmpty.setVisibility(View.VISIBLE);
+        filtroJugador = "%";   // ya no quedan jugadores, se quita el filtro
+        cargarScores();
 
         Log.i(LOG_TAG, "DELETE: Se han borrado las puntuaciones");
+    }
+
+    private void cargarScores() {
+        List<FinalScore> scores = db.finalScoreDAO().getTop10ScoresFiltered(filtroJugador);
+        adapter.setScores(scores);
+        tvEmpty.setVisibility(scores.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     @Override
